@@ -83,11 +83,15 @@ static void window_load(Window* window) {
   music_icon_play = gbitmap_create_with_resource(RESOURCE_ID_MUSIC_ICON_PLAY);
 
   Layer *window_layer = window_get_root_layer(window);
-  text_layer = text_layer_create(layer_get_bounds(window_layer));
+  GRect bounds = layer_get_bounds(window_layer);
+
+  text_layer = text_layer_create(GRect(0, bounds.size.h / 2 - 28, bounds.size.w - ACTION_BAR_WIDTH, 84));
   text_layer_set_background_color(text_layer, GColorClear);
+  text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(text_layer));
   update_text();
+
+  layer_add_child(window_layer, text_layer_get_layer(text_layer));
 
   action_bar = action_bar_layer_create();
   action_bar_layer_add_to_window(action_bar, window);

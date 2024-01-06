@@ -50,10 +50,14 @@ static void window_load(Window* window) {
   last_ms = 0;
 
   Layer *window_layer = window_get_root_layer(window);
-  text_layer = text_layer_create(layer_get_bounds(window_layer));
+  GRect bounds = layer_get_bounds(window_layer);
+
+  text_layer = text_layer_create(GRect(0, bounds.size.h / 2 - 28, bounds.size.w, 84));
+  text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(text_layer));
   update_text();
+
+  layer_add_child(window_layer, text_layer_get_layer(text_layer));
 }
 
 static void window_unload(Window* window) {
