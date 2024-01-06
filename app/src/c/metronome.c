@@ -1,60 +1,89 @@
 #include <pebble.h>
+#include "state/state.h"
+#include "window/beat.h"
+#include "window/metronome.h"
+#include "window/tap.h"
 
-static Window *s_window;
-static TextLayer *s_text_layer;
+static Window* window;
 
-static void prv_select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(s_text_layer, "Select");
+static Window* beat_window;
+static Window* metronome_window;
+static Window* tap_window;
+
+static State* state;
+
+static SimpleMenuLayer* menu_layer;
+
+static void start_beat(int index, void *context) {
+  window_stack_push(beat_window, true);
 }
 
-static void prv_up_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(s_text_layer, "Up");
+static void start_metronome(int index, void *context) {
+  window_stack_push(metronome_window, true);
 }
 
-static void prv_down_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(s_text_layer, "Down");
+static void start_tap(int index, void *context) {
+  window_stack_push(tap_window, true);
 }
 
-static void prv_click_config_provider(void *context) {
-  window_single_click_subscribe(BUTTON_ID_SELECT, prv_select_click_handler);
-  window_single_click_subscribe(BUTTON_ID_UP, prv_up_click_handler);
-  window_single_click_subscribe(BUTTON_ID_DOWN, prv_down_click_handler);
+static void window_load(Window* window) {
+  static const SimpleMenuItem items[3] = {
+    {
+      .title = "Metronome",
+      .callback = start_metronome,
+    },
+    {
+      .title = "Beat",
+      .callback = start_beat,
+    },
+    {
+      .title = "Tap",
+      .callback = start_tap,
+    },
+  };
+  static const SimpleMenuSection sections[1] = {
+    {
+      .items = items,
+      .num_items = 3,
+    },
+  };
+  Layer* window_layer = window_get_root_layer(window);
+  menu_layer = simple_menu_layer_create(layer_get_bounds(window_layer), window, sections, 1, NULL);
+  layer_add_child(window_layer, simple_menu_layer_get_layer(menu_layer));
 }
 
-static void prv_window_load(Window *window) {
-  Layer *window_layer = window_get_root_layer(window);
-  GRect bounds = layer_get_bounds(window_layer);
-
-  s_text_layer = text_layer_create(GRect(0, 72, bounds.size.w, 20));
-  text_layer_set_text(s_text_layer, "Press a button");
-  text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
+static void window_unload(Window* window) {
+  simple_menu_layer_destroy(menu_layer);
 }
 
-static void prv_window_unload(Window *window) {
-  text_layer_destroy(s_text_layer);
-}
-
-static void prv_init(void) {
-  s_window = window_create();
-  window_set_click_config_provider(s_window, prv_click_config_provider);
-  window_set_window_handlers(s_window, (WindowHandlers) {
-    .load = prv_window_load,
-    .unload = prv_window_unload,
+static void init(void) {
+  window = window_create();
+  window_set_window_handlers(window, (WindowHandlers) {
+    .load = window_load,
+    .unload = window_unload,
   });
-  const bool animated = true;
-  window_stack_push(s_window, animated);
+
+  state = state_init();
+
+  beat_window = beat_init(state);
+  metronome_window = metronome_init(state);
+  tap_window = tap_init(state);
+
+  window_stack_push(window, true);
 }
 
-static void prv_deinit(void) {
-  window_destroy(s_window);
+static void deinit(void) {
+  beat_deinit();
+  metronome_deinit();
+  tap_deinit();
+
+  state_write();
+
+  window_destroy(window);
 }
 
 int main(void) {
-  prv_init();
-
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", s_window);
-
+  init();
   app_event_loop();
-  prv_deinit();
+  deinit();
 }

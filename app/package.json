@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "metronome",
+    "displayName": "Metronome",
     "uuid": "eba8e090-81ba-49a8-ac5a-a7677934b593",
     "sdkVersion": "3",
     "enableMultiJS": true,
@@ -23,7 +23,28 @@
     "messageKeys": [
     ],
     "resources": {
-      "media": []
+      "media": [
+        {
+          "file": "action_bar_icon_down.png",
+          "name": "ACTION_BAR_ICON_DOWN",
+          "type": "bitmap"
+        },
+        {
+          "file": "action_bar_icon_up.png",
+          "name": "ACTION_BAR_ICON_UP",
+          "type": "bitmap"
+        },
+        {
+          "file": "music_icon_pause.png",
+          "name": "MUSIC_ICON_PAUSE",
+          "type": "bitmap"
+        },
+        {
+          "file": "music_icon_play.png",
+          "name": "MUSIC_ICON_PLAY",
+          "type": "bitmap"
+        }
+      ]
     }
   }
 }
