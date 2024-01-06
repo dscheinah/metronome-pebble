@@ -15,6 +15,7 @@ static GBitmap* music_icon_pause;
 static GBitmap* music_icon_play;
 
 static TextLayer* text_layer;
+static TextLayer* beat_layer;
 
 static bool running = false;
 static int counter = 0;
@@ -23,6 +24,11 @@ static void update_text() {
   static char buffer[4];
   snprintf(buffer, 4, "%i", state->temp);
   text_layer_set_text(text_layer, buffer);
+  if (state->beat) {
+    static char beatBuffer[7];
+    snprintf(beatBuffer, 7, "%i/%i", (counter % state->beat) + 1, state->beat);
+    text_layer_set_text(beat_layer, beatBuffer);
+  }
 }
 
 static void metronome_loop() {
@@ -33,6 +39,7 @@ static void metronome_loop() {
   } else {
     window_set_background_color(window, GColorLightGray);
   }
+  update_text();
   if (quiet_time_is_active()) {
     return;
   }
@@ -89,9 +96,15 @@ static void window_load(Window* window) {
   text_layer_set_background_color(text_layer, GColorClear);
   text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
+
+  beat_layer = text_layer_create(GRect(12, bounds.size.h - 36, bounds.size.w - ACTION_BAR_WIDTH - 12, 36));
+  text_layer_set_background_color(beat_layer, GColorClear);
+  text_layer_set_font(beat_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+
   update_text();
 
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
+  layer_add_child(window_layer, text_layer_get_layer(beat_layer));
 
   action_bar = action_bar_layer_create();
   action_bar_layer_add_to_window(action_bar, window);
@@ -110,6 +123,7 @@ static void window_unload(Window* window) {
   action_bar_layer_destroy(action_bar);
 
   text_layer_destroy(text_layer);
+  text_layer_destroy(beat_layer);
 
   gbitmap_destroy(action_bar_icon_down);
   gbitmap_destroy(action_bar_icon_up);
