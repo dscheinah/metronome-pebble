@@ -45,9 +45,19 @@ static void metronome_loop() {
   }
   vibes_cancel();
   if (state->beat && counter % state->beat == 0) {
-    vibes_double_pulse();
+    static const uint32_t beatDurations[1] = {100};
+    static const VibePattern beatVibe = {
+      .durations = beatDurations,
+      .num_segments = 1,
+    };
+    vibes_enqueue_custom_pattern(beatVibe);
   } else {
-    vibes_short_pulse();
+    static const uint32_t durations[1] = {50};
+    static const VibePattern vibe = {
+      .durations = durations,
+      .num_segments = 1,
+    };
+    vibes_enqueue_custom_pattern(vibe);
   }
 }
 
@@ -64,7 +74,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-  if (state->temp < 999) {
+  if (state->temp < 500) {
     state->temp++;
     update_text();
   }
