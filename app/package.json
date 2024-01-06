@@ -1,0 +1,29 @@
+{
+  "name": "metronome",
+  "author": "Dscheinah",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "metronome",
+    "uuid": "eba8e090-81ba-49a8-ac5a-a7677934b593",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk",
+      "diorite",
+      "emrite"
+    ],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": [
+    ],
+    "resources": {
+      "media": []
+    }
+  }
+}
