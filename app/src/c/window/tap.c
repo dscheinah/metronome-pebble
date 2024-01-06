@@ -58,7 +58,7 @@ static void window_load(Window* window) {
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   update_text();
 
-  label_layer = text_layer_create(GRect(0, 6, bounds.size.w, 36));
+  label_layer = text_layer_create(GRect(0, PBL_IF_ROUND_ELSE(31, 6), bounds.size.w, 36));
   text_layer_set_font(label_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
   text_layer_set_text_alignment(label_layer, GTextAlignmentCenter);
   text_layer_set_text(label_layer, "Tap tempo with clicks");

@@ -47,7 +47,7 @@ static void window_load(Window* window) {
   };
   static const SimpleMenuSection sections[1] = {
     {
-      .title = "Metronome Menu",
+      .title = PBL_IF_ROUND_ELSE("", "Metronome Menu"),
       .items = items,
       .num_items = 3,
     },

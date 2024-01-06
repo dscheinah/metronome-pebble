@@ -107,8 +107,11 @@ static void window_load(Window* window) {
   text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
 
-  beat_layer = text_layer_create(GRect(12, bounds.size.h - 36, bounds.size.w - ACTION_BAR_WIDTH - 12, 36));
+  beat_layer = text_layer_create(GRect(12, bounds.size.h - 36, bounds.size.w - 24, 36));
   text_layer_set_background_color(beat_layer, GColorClear);
+  #if defined(PBL_ROUND)
+    text_layer_set_text_alignment(beat_layer, GTextAlignmentCenter);
+  #endif
   text_layer_set_font(beat_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
 
   update_text();
