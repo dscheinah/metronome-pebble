@@ -30,19 +30,23 @@ static void window_load(Window* window) {
   static const SimpleMenuItem items[3] = {
     {
       .title = "Metronome",
+      .subtitle = "Adjust and run",
       .callback = start_metronome,
     },
     {
       .title = "Beat",
+      .subtitle = "Change time signature",
       .callback = start_beat,
     },
     {
       .title = "Tap",
+      .subtitle = "BPM detector",
       .callback = start_tap,
     },
   };
   static const SimpleMenuSection sections[1] = {
     {
+      .title = "Metronome Menu",
       .items = items,
       .num_items = 3,
     },
