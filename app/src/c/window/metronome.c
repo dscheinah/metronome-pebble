@@ -27,8 +27,17 @@ static void update_text() {
 
 static void metronome_loop() {
   timer = app_timer_register(60000 / state->temp, metronome_loop, NULL);
+  counter++;
+  if (counter % 2 == 0) {
+    window_set_background_color(window, GColorWhite);
+  } else {
+    window_set_background_color(window, GColorLightGray);
+  }
+  if (quiet_time_is_active()) {
+    return;
+  }
   vibes_cancel();
-  if (state->beat && counter++ % state->beat == 0) {
+  if (state->beat && counter % state->beat == 0) {
     vibes_double_pulse();
   } else {
     vibes_short_pulse();
@@ -75,6 +84,7 @@ static void window_load(Window* window) {
 
   Layer *window_layer = window_get_root_layer(window);
   text_layer = text_layer_create(layer_get_bounds(window_layer));
+  text_layer_set_background_color(text_layer, GColorClear);
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
   update_text();
