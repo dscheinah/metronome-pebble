@@ -6,6 +6,7 @@ static State* state;
 static Window* window;
 
 static TextLayer* text_layer;
+static TextLayer* label_layer;
 
 static int detected = 0;
 static int sum = 0;
@@ -57,7 +58,13 @@ static void window_load(Window* window) {
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   update_text();
 
+  label_layer = text_layer_create(GRect(0, 6, bounds.size.w, 36));
+  text_layer_set_font(label_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+  text_layer_set_text_alignment(label_layer, GTextAlignmentCenter);
+  text_layer_set_text(label_layer, "Tap tempo with clicks");
+
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
+  layer_add_child(window_layer, text_layer_get_layer(label_layer));
 }
 
 static void window_unload(Window* window) {
@@ -65,6 +72,7 @@ static void window_unload(Window* window) {
     state->temp = detected;
   }
   text_layer_destroy(text_layer);
+  text_layer_destroy(label_layer);
 }
 
 Window* tap_init(State* stateRef) {
