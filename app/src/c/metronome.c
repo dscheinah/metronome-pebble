@@ -15,6 +15,7 @@ static State* state;
 static SimpleMenuLayer* menu_layer;
 
 static void start_beat(int index, void *context) {
+  beat_update();
   window_stack_push(beat_window, true);
 }
 
